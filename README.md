@@ -1,4 +1,4 @@
-# JsonEncoder
+# jsonencoder
 
 A command line tool written in Go that can accept a JSON string or file and encode or decode it. This tool helps solve the problem of providing plain text JSON that needs to be parseable when there are escape characters.
 
@@ -16,7 +16,7 @@ A command line tool written in Go that can accept a JSON string or file and enco
 
 ```bash
 git clone https://github.com/Knighton-Dev/jsonencoder.git
-cd JsonEncoder
+cd jsonencoder
 go build -o jsonencoder
 ```
 
@@ -74,7 +74,7 @@ After installation, you can run `jsonencoder` from any directory without the `./
 ## Usage
 
 ```
-JsonEncoder - A CLI tool to encode and decode JSON strings
+jsonencoder - A CLI tool to encode and decode JSON strings
 
 Usage:
   jsonencoder [options] <command> <input>

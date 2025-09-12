@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	usage = `JsonEncoder - A CLI tool to encode and decode JSON strings
+	usage = `jsonencoder - A CLI tool to encode and decode JSON strings
 
 Usage:
   %s [options] <command> <input>
