@@ -215,28 +215,38 @@ func TestReadFromFileWithWhitespace(t *testing.T) {
 }
 
 func TestRoundTrip(t *testing.T) {
-	// Test encoding then decoding returns the original
-	original := `{"name": "John Doe", "age": 30, "hobbies": ["reading", "coding"]}`
-
-	encoded, err := encodeJSON(original)
-	if err != nil {
-		t.Fatalf("Failed to encode JSON: %v", err)
+	testCases := []string{
+		`{"name": "John Doe", "age": 30, "hobbies": ["reading", "coding"]}`,
+		`{"text": "He said, \"Hello!\""}`,
+		`{"path": "C:\\Users\\test\\file.txt"}`,
+		`{"special": "Tab\tNewline\nCarriage\rReturn"}`,
+		`{"unicode": "\u263A smile"}`,
+		`{"quote": "\"double\" and 'single' quotes"}`,
+		`{"backslash": "This \\ is a backslash"}`,
+		`{"mix": "Quotes: \" \\ Backslash: \\ Newline: \n"}`,
 	}
 
-	decoded, err := decodeJSON(encoded)
-	if err != nil {
-		t.Fatalf("Failed to decode JSON: %v", err)
-	}
+	for _, original := range testCases {
+		encoded, err := encodeJSON(original)
+		if err != nil {
+			t.Fatalf("Failed to encode JSON: %v (input: %s)", err, original)
+		}
 
-	// Compare decoded and original as JSON objects for logical equality
-	var gotObj, wantObj interface{}
-	if err := json.Unmarshal([]byte(decoded), &gotObj); err != nil {
-		t.Fatalf("Decoded output is not valid JSON: %v", err)
-	}
-	if err := json.Unmarshal([]byte(original), &wantObj); err != nil {
-		t.Fatalf("Original input is not valid JSON: %v", err)
-	}
-	if !equalJSON(gotObj, wantObj) {
-		t.Errorf("Round trip failed: got %v, want %v", decoded, original)
+		decoded, err := decodeJSON(encoded)
+		if err != nil {
+			t.Fatalf("Failed to decode JSON: %v (input: %s)", err, original)
+		}
+
+		// Compare decoded and original as JSON objects for logical equality
+		var gotObj, wantObj interface{}
+		if err := json.Unmarshal([]byte(decoded), &gotObj); err != nil {
+			t.Fatalf("Decoded output is not valid JSON: %v (input: %s)", err, original)
+		}
+		if err := json.Unmarshal([]byte(original), &wantObj); err != nil {
+			t.Fatalf("Original input is not valid JSON: %v (input: %s)", err, original)
+		}
+		if !equalJSON(gotObj, wantObj) {
+			t.Errorf("Round trip failed: got %v, want %v (input: %s)", decoded, original, original)
+		}
 	}
 }

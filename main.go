@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -130,13 +131,9 @@ func encodeJSON(jsonStr string) (string, error) {
 		return "", fmt.Errorf("failed to minify JSON: %v", err)
 	}
 
-	// Now encode the minified JSON string for embedding
-	encoded, err := json.Marshal(string(minified))
-	if err != nil {
-		return "", fmt.Errorf("failed to encode JSON: %v", err)
-	}
-
-	return string(encoded), nil
+	// Use strconv.Quote to escape special characters for safe embedding
+	quoted := strconv.Quote(string(minified))
+	return quoted, nil
 }
 
 // decodeJSON takes an encoded JSON string and decodes it
