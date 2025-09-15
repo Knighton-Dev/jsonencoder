@@ -224,6 +224,8 @@ func TestRoundTrip(t *testing.T) {
 		`{"quote": "\"double\" and 'single' quotes"}`,
 		`{"backslash": "This \\ is a backslash"}`,
 		`{"mix": "Quotes: \" \\ Backslash: \\ Newline: \n"}`,
+		// New test case for escaped quotes and backslashes
+		`{"Database":"cool_db","Password":"kRp-CK@D2DCc3d9Qo\\\"ZG3WBBg@i2jgo build -o jsonencoder","Server":"192.168.1.1","User_Id":"super\\\"_user"}`,
 	}
 
 	for _, original := range testCases {
