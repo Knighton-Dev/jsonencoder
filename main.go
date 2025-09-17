@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -34,8 +35,10 @@ Examples:
 
 func main() {
 	var fileInput bool
+	var base64Flag bool
 	flag.BoolVar(&fileInput, "f", false, "Read input from file")
 	flag.BoolVar(&fileInput, "file", false, "Read input from file")
+	flag.BoolVar(&base64Flag, "base64", false, "Base64 encode/decode output/input")
 
 	flag.Usage = func() {
 		progName := os.Args[0]
@@ -85,9 +88,21 @@ func main() {
 			fmt.Fprintf(os.Stderr, "Error encoding JSON: %v\n", err)
 			os.Exit(1)
 		}
+		if base64Flag {
+			result = base64.StdEncoding.EncodeToString([]byte(result))
+		}
 		fmt.Println(result)
 	case "decode":
-		result, err := decodeJSON(jsonData)
+		inputToDecode := jsonData
+		if base64Flag {
+			decodedBytes, err := base64.StdEncoding.DecodeString(jsonData)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error decoding base64: %v\n", err)
+				os.Exit(1)
+			}
+			inputToDecode = string(decodedBytes)
+		}
+		result, err := decodeJSON(inputToDecode)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error decoding JSON: %v\n", err)
 			os.Exit(1)
