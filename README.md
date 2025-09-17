@@ -4,11 +4,12 @@ A command line tool written in Go that can accept a JSON string or file and enco
 
 ## Features
 
-- **Encode JSON**: Convert JSON to an escaped string format that can be safely embedded in other contexts
-- **Decode JSON**: Convert escaped JSON strings back to their original format  
-- **File Support**: Read JSON input from files or provide it directly as command line arguments
-- **Validation**: Ensures input is valid JSON before processing
-- **Error Handling**: Clear error messages for invalid input
+ - **Encode JSON**: Convert JSON to an escaped string format that can be safely embedded in other contexts
+ - **Decode JSON**: Convert escaped JSON strings back to their original format
+ - **Base64 Support**: Optionally base64 encode output or decode input using the `--base64` flag
+ - **File Support**: Read JSON input from files or provide it directly as command line arguments
+ - **Validation**: Ensures input is valid JSON before processing
+ - **Error Handling**: Clear error messages for invalid input
 
 ## Installation
 
@@ -85,10 +86,40 @@ Commands:
 
 Options:
   -f, --file    Read input from file instead of command line argument
+  --base64      Base64 encode output (on encode) or decode input (on decode)
   -h, --help    Show this help message
 ```
 
 ## Examples
+### Base64 Encoding JSON
+
+Encode a JSON string and base64 encode the output:
+
+```bash
+jsonencoder --base64 encode '{"key": "value"}'
+# Output: (base64 string)
+```
+
+Encode JSON from a file and base64 encode:
+
+```bash
+jsonencoder -f --base64 encode input.json
+```
+
+### Base64 Decoding JSON
+
+Decode a base64-encoded, escaped JSON string:
+
+```bash
+jsonencoder --base64 decode 'eyJrZXkiOiAidmFsdWUifQ=='
+# Output: {"key": "value"}
+```
+
+Decode base64-encoded JSON from a file:
+
+```bash
+jsonencoder -f --base64 decode encoded.b64
+```
 
 ### Encoding JSON
 
@@ -121,6 +152,22 @@ jsonencoder -f decode encoded.json
 ```
 
 ### Round Trip Example
+# With base64 encoding/decoding
+
+```bash
+# Start with original JSON
+echo '{"name": "John", "age": 30}' > original.json
+
+# Encode and base64 encode
+jsonencoder -f --base64 encode original.json > encoded.b64
+
+# Decode from base64
+jsonencoder -f --base64 decode encoded.b64 > decoded.json
+
+# Compare original and decoded
+diff original.json decoded.json
+# Should show no differences
+```
 
 ```bash
 # Start with original JSON
